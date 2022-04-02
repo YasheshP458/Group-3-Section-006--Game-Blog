@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>index</title>
+    <link rel="stylesheet" href={{ url_for( 'static' , filename='style.css' ) }} />
+</head>
+
+<body>
+    <h1 text-align: center;>Game Blog</h1>
+
+    <form method="POST" action="/login">
+        <input type="text" placeholder="Your Username" name="userName" />
+        <input type="text" placeholder="Password" name="userPW" />
+        <input type="submit" value="Submit!" />
+    </form>
+
+
+    <a class="lr" href="{{url_for('index')}}"> Go back to the Welcome page </a>
+
+    </div>
+</body>
+
+</html>
