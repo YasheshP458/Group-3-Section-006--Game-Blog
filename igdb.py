@@ -37,23 +37,47 @@ def get_igdb_token_json():
     # Print JSON neatly (must add print statement)
     return json.dumps(game_data, indent=4, sort_keys=True)
 
-
-# Example query for getting all available data for 10 games (default)
-def get_game_data():
+def get_game_data(game_id: int):
     """
     Used to return the movie data for rendering in the application.
-    Gets JSON and interprets from site.
+    Gets JSON and interprets from site using id associated with every game.
     """
+    base_url = "https://api.igdb.com/v4/games"
 
-    base_url = "https://api.igdb.com/v4/games/"
 
     headers = {
         "Client-ID": client_id,
         "Authorization": "Bearer " + access_token,
+        "Accept": "application/json",
     }
 
     # Get all available data. Can be changed to only get specific information
-    data = "fields *;"
+    data = f"fields *; where id = {game_id};"
+
+
+    response = requests.post(base_url, data=data, headers=headers)
+
+    # Returns Python dictionary
+    game_data = response.json()
+
+    # Print JSON neatly (must add print statement)
+    return json.dumps(game_data, indent=4, sort_keys=True)
+
+def search_game_data(game_name: str):
+    """
+    Get video game data through IGDB search.
+    Gets JSON and interprets from site using closest search result.
+    """
+    base_url = "https://api.igdb.com/v4/games"
+
+    headers = {
+        "Client-ID": client_id,
+        "Authorization": "Bearer " + access_token,
+        "Accept": "application/json",
+    }
+
+    # Get all available data for first result. Can be changed to only get specific information
+    data = f'fields *; where slug = "{game_name}"; limit 1;'
 
     response = requests.post(base_url, data=data, headers=headers)
 
@@ -64,34 +88,6 @@ def get_game_data():
     return json.dumps(game_data, indent=4, sort_keys=True)
 
 
-print(get_game_data())
-
-"""
-Example Code from Milestone if needed.
-Can use this similar logic to pass specific variables to our app.
-
-def get_title(game_data):
-    return game_data["title"]
-
-def get_tagline(game_data):
-    return game_data["tagline"]
-
-def get_genres(game_data):
-    genre_data = game_data["genres"]
-    genres = []
-    for i in range(len(genre_data)):
-        genre_data = game_data["genres"][i]["name"]
-        genres.append(genre_data)
-    return genres
-
-def get_poster(game_data):
-    return game_data["poster_path"]
-
-title = get_title(game_data)
-tagline = get_tagline(game_data)
-genres = get_genres(game_data)
-poster = get_poster(game_data)
-
-# Lists or values to be passed to application. Single movie
-return title, tagline, genres, poster
-"""
+# These should return the same thing. search_game_data will fail if the title doesn't exist
+print(get_game_data(1074))  # Super Mario 64
+print(search_game_data("super-mario-64"))
