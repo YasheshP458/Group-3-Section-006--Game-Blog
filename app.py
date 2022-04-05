@@ -1,3 +1,7 @@
+"""
+Game Blog
+"""
+
 import flask
 import os
 
