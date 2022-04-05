@@ -14,7 +14,7 @@ client_secret = os.getenv("client_secret")  # Load IGDB Client Secret Key
 access_token = os.getenv("access_token")  # Load IGDB API Access Token (used for API call)
 
 # Access Token: Listed in .env
-# Expires: around June 8, 2022 
+# Expires: around June 8, 2022
 # Token Type: bearer
 
 
@@ -37,13 +37,13 @@ def get_igdb_token_json():
     # Print JSON neatly (must add print statement)
     return json.dumps(game_data, indent=4, sort_keys=True)
 
-
 def get_game_data(game_id: int):
     """
     Used to return the movie data for rendering in the application.
     Gets JSON and interprets from site using id associated with every game.
     """
     base_url = "https://api.igdb.com/v4/games"
+
 
     headers = {
         "Client-ID": client_id,
@@ -54,6 +54,7 @@ def get_game_data(game_id: int):
     # Get all available data. Can be changed to only get specific information
     data = f"fields *; where id = {game_id};"
 
+
     response = requests.post(base_url, data=data, headers=headers)
 
     # Returns Python dictionary
@@ -61,7 +62,6 @@ def get_game_data(game_id: int):
 
     # Print JSON neatly (must add print statement)
     return json.dumps(game_data, indent=4, sort_keys=True)
-
 
 def search_game_data(game_name: str):
     """
