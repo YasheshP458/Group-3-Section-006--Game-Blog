@@ -1,3 +1,5 @@
+#pylint: disable=invalid-envvar-default
+
 """
 Game Blog
 """
