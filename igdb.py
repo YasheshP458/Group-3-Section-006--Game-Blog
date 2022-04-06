@@ -3,6 +3,8 @@ IGDB Movie Data & API Query
 Nathan Heckman
 """
 
+#pylint: disable=pointless-string-statement, line-too-long
+
 import os
 import json
 import requests
@@ -84,10 +86,53 @@ def search_game_data(game_name: str):
     # Returns Python dictionary
     game_data = response.json()
 
-    # Print JSON neatly (must add print statement)
-    return json.dumps(game_data, indent=4, sort_keys=True)
+    game_id = game_data[0]['id']
+    game_name = game_data[0]['name']
+    game_summary = game_data[0]['summary']
+
+    cover_url = get_cover_url(game_id)
+
+    # Return the game information needed. Can be assigned via tuple in app.py
+    return game_name, cover_url, game_summary
+
+def get_cover_url(game_id: int):
+    """
+    Gets the cover art for a specific game based on its game ID.
+    """
+    base_url = "https://api.igdb.com/v4/covers"
+
+    headers = {
+        "Client-ID": client_id,
+        "Authorization": "Bearer " + access_token,
+        "Accept": "application/json",
+    }
+
+    # Get the specific URL for that game's thumbnail cover image
+    data = f'fields url; where game = {game_id};'
+
+    response = requests.post(base_url, data=data, headers=headers)
+
+    # Returns Python dictionary with cover data
+    cover_data = response.json()
+
+    # Get the thumbnail version of the image fro JSON response
+    image_url = cover_data[0]['url']
+
+    # Get only the specific image file name
+    image_file = image_url[44:]
+
+    # Gets the larger version of the picture. Not sure how to access natively
+    image_url = "//images.igdb.com/igdb/image/upload/t_cover_big/" + image_file
+
+    # Return cleaned image URL
+    return image_url
 
 
-# These should return the same thing. search_game_data will fail if the title doesn't exist
-print(get_game_data(1074))  # Super Mario 64
-print(search_game_data("super-mario-64"))
+'''Example Use Cases'''
+
+''' print(get_game_data(1074))  <-- Generate data for Super Mario 64 based on Game ID '''
+''' print(search_game_data("super-mario-strikers")) <-- Input must be formatted in this way for slug search to work. Returns game title, cover art url, and summary currently '''
+''' print(get_cover_url(2256)) <-- Used within search_game_data(). This example generates the cover art for Super Mario Strikers '''
+
+''' Note that search_game_data() will fail if that exact game slug doesn't exist. The slug for most games is just their name hyphenated as a single word, so this shouldn't be much of an issue. '''
+''' User input will have to be altered so that the input to search_game_data() is lower-case, trailing white space is erased, and each word is seperated with hyphens. '''
