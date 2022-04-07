@@ -14,7 +14,6 @@ from oauth2client.contrib.flask_util import UserOAuth2
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 
-
 app = flask.Flask(__name__)
 # app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
