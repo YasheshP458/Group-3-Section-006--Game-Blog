@@ -143,5 +143,5 @@ def clean_string(s: str):
 '''Example Use Cases'''
 
 ''' print(get_game_data(1074))  <-- Generate data for Super Mario 64 based on Game ID '''
-''' print(search_game_data("super-mario-strikers")) <-- Input must be formatted in this way for slug search to work. Returns game title, cover art url, and summary currently '''
+''' print(search_game_data("Super Mario Strikers")) <-- Returns game title, cover art url, and summary currently '''
 ''' print(get_cover_url(2256)) <-- Used within search_game_data(). This example generates the cover art for Super Mario Strikers '''
