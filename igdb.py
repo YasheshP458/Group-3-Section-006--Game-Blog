@@ -3,7 +3,7 @@ IGDB Movie Data & API Query
 Nathan Heckman
 """
 
-#pylint: disable=line-too-long, invalid-name, pointless-string-statement
+#pylint: disable=line-too-long, invalid-name, pointless-string-statement, bare-except
 
 import os
 import json
@@ -69,32 +69,35 @@ def search_game_data(game_name: str):
     Get video game data through IGDB search.
     Gets JSON and interprets from site using closest search result.
     """
-    game_name = clean_string(game_name)
+    try:
+        game_name = clean_string(game_name)
 
-    base_url = "https://api.igdb.com/v4/games"
+        base_url = "https://api.igdb.com/v4/games"
 
-    headers = {
-        "Client-ID": client_id,
-        "Authorization": "Bearer " + access_token,
-        "Accept": "application/json",
-    }
+        headers = {
+            "Client-ID": client_id,
+            "Authorization": "Bearer " + access_token,
+            "Accept": "application/json",
+        }
 
-    # Get all available data for first result. Can be changed to only get specific information
-    data = f'fields *; where slug = "{game_name}"; limit 1;'
+        # Get all available data for first result. Can be changed to only get specific information
+        data = f'fields *; where slug = "{game_name}"; limit 1;'
 
-    response = requests.post(base_url, data=data, headers=headers)
+        response = requests.post(base_url, data=data, headers=headers)
 
-    # Returns Python dictionary
-    game_data = response.json()
+        # Returns Python dictionary
+        game_data = response.json()
 
-    game_id = game_data[0]['id']
-    game_name = game_data[0]['name']
-    game_summary = game_data[0]['summary']
+        game_id = game_data[0]['id']
+        game_name = game_data[0]['name']
+        game_summary = game_data[0]['summary']
 
-    cover_url = get_cover_url(game_id)
+        cover_url = get_cover_url(game_id)
 
-    # Return the game information needed. Can be assigned via tuple in app.py
-    return game_name, cover_url, game_summary
+        # Return the game information needed. Can be assigned via tuple in app.py
+        return game_name, cover_url, game_summary
+    except:
+        return "Invalid Name"
 
 def get_cover_url(game_id: int):
     """
@@ -143,5 +146,5 @@ def clean_string(s: str):
 '''Example Use Cases'''
 
 ''' print(get_game_data(1074))  <-- Generate data for Super Mario 64 based on Game ID '''
-''' print(search_game_data("Super Mario Strikers")) <-- Returns game title, cover art url, and summary currently '''
+''' print(search_game_data("Super Mario Strikers")) <-- Returns game title, cover art url, and summary currently. If doesn't exist, returns "Invalid Name" '''
 ''' print(get_cover_url(2256)) <-- Used within search_game_data(). This example generates the cover art for Super Mario Strikers '''
