@@ -145,6 +145,3 @@ def clean_string(s: str):
 ''' print(get_game_data(1074))  <-- Generate data for Super Mario 64 based on Game ID '''
 ''' print(search_game_data("super-mario-strikers")) <-- Input must be formatted in this way for slug search to work. Returns game title, cover art url, and summary currently '''
 ''' print(get_cover_url(2256)) <-- Used within search_game_data(). This example generates the cover art for Super Mario Strikers '''
-
-''' Note that search_game_data() will fail if that exact game slug doesn't exist. The slug for most games is just their name hyphenated as a single word, so this shouldn't be much of an issue. '''
-''' User input will have to be altered so that the input to search_game_data() is lower-case, trailing white space is erased, and each word is seperated with hyphens. '''
