@@ -3,7 +3,7 @@ IGDB Movie Data & API Query
 Nathan Heckman
 """
 
-#pylint: disable=pointless-string-statement, line-too-long
+#pylint: disable=line-too-long, invalid-name, pointless-string-statement
 
 import os
 import json
@@ -23,7 +23,6 @@ access_token = os.getenv("access_token")  # Load IGDB API Access Token (used for
 def get_igdb_token_json():
     """
     DO NOT RUN UNLESS TOKEN IS EXPIRED OR NOT WORKING!
-
     Used to get a new token from API in case of token expiration.
     Not intended to be used outside of this file.
     New token will have to be manually changed in .env (access_token)
@@ -70,6 +69,8 @@ def search_game_data(game_name: str):
     Get video game data through IGDB search.
     Gets JSON and interprets from site using closest search result.
     """
+    game_name = clean_string(game_name)
+
     base_url = "https://api.igdb.com/v4/games"
 
     headers = {
@@ -127,6 +128,17 @@ def get_cover_url(game_id: int):
     # Return cleaned image URL
     return image_url
 
+def clean_string(s: str):
+    """
+    Trim and clean user input string for processing in search_game_data()
+    """
+    # 1. Trim whitespace from front and back of string
+    # 2. Convert string to lowercase
+    # 3. Replace all remaining spaces with dash
+
+    """ Super Mario 64 --> super-mario-64 """
+
+    return s.strip().lower().replace(" ", "-")
 
 '''Example Use Cases'''
 
