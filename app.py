@@ -1,7 +1,10 @@
-# pylint: disable=invalid-envvar-default, unused-import
+# pylint: disable=invalid-envvar-default, unused-import, pointless-string-statement
 
 """
 Game Blog
+
+Nathan Heckman, Ba Choi, Yashesh Patel, 
+Chris English, Aaron Reyes
 """
 
 import os
@@ -10,6 +13,8 @@ import requests
 
 from flask import Flask, session, abort, redirect
 
+from flask_sqlalchemy import SQLAlchemy
+
 from oauth2client.contrib.flask_util import UserOAuth2
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
@@ -17,11 +22,33 @@ import google_auth_oauthlib.flow
 app = flask.Flask(__name__)
 # app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
+''' 
+USED FOR CLEANING DATABASE URI, NEED TO TOUCH UP
+
+uri = os.getenv("DATABASE_URL")
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+'''
+
 app.config["SECRET_KEY"] = "thisissecretkey"
 app.config["GOOGLE_OAUTH2_CLIENT_SECRETS_FILE"] = "client_secret.json"
+# Point SQLAlchemy to Heroku database. Already accounted for postgres -> postgresql
+# app.config["SQLALCHEMY_DATABASE_URI"] = uri
+# Gets rid of meaningless warnings
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+class Database(db.Model):
+    """Movie Data Database"""
+    
+    '''NEED TO CHANGE THIS. SKELETON CODE'''
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String())
+    password = db.Column(db.String())
+    email = db.Column(db.String())
 
 oauth2 = UserOAuth2(app)
-
 
 @app.route("/login")
 def login():
