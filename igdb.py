@@ -5,7 +5,6 @@ Nathan Heckman
 
 #pylint: disable=line-too-long, invalid-name, pointless-string-statement
 
-from inspect import cleandoc
 import os
 import json
 import requests
