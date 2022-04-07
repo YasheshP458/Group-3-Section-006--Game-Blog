@@ -8,16 +8,20 @@
 
 <body>
     <h1 text-align: center;>Game Blog</h1>
-
+    <h3>Log in with Game Blog Account</h3>
     <form method="POST" action="/login">
         <input type="text" placeholder="Your Username" name="userName" />
         <input type="text" placeholder="Password" name="userPW" />
         <input type="submit" value="Submit!" />
     </form>
 
-
-    <a class="lr" href="{{url_for('index')}}"> Go back to the Welcome page </a>
-
+    </div>
+    <div>
+        <h3> Or </h3>
+        <a href="{{url_for('oauth2authorize')}}"> <img class="G_button" src="static/signGoogle.png"></a>
+    </div>
+    <div>
+        <a class="lr" href="{{url_for('index')}}"> Go back to the Welcome page </a>
     </div>
 </body>
 
