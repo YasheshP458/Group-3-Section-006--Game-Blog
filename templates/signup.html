@@ -9,11 +9,17 @@
 
 <body>
     <h1 text-align: center;>Game Blog</h1>
-
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <p>{{ messages }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
     <form method="POST" action="/signup">
         <input type="text" placeholder="Your Username" name="userName" />
-        <input type="text" placeholder="Password" name="userPW" />
-        <input type="text" placeholder="Re-enter Password" name="userRePW" />
+        <input type="password" placeholder="Password" name="userPW" />
+        <input type="password" placeholder="Re-enter Password" name="userRePW" />
 
         <input type="submit" value="Submit!" />
     </form>
