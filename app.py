@@ -1,4 +1,4 @@
-# pylint: disable=invalid-envvar-default, unused-import, pointless-string-statement, no-add-member
+# pylint: disable=invalid-envvar-default, unused-import, pointless-string-statement, no-member, invalid-name
 
 """
 Game Blog
