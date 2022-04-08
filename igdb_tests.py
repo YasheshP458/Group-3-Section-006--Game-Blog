@@ -3,6 +3,8 @@ IGDB Movie Data & API Query Unit Tests
 Aaron Reyes
 """
 
+# pylint: disable=unused-import, missing-class-docstring, line-too-long
+
 import json
 import unittest
 from unittest.mock import MagicMock, patch
@@ -27,8 +29,7 @@ class IgdbTests(unittest.TestCase):
     #         result = get_igdb_token_json()
     #         self.assertEqual(result, "google.com")
 
-
-    #currently just tests if returned a string, need to change to see if it is valid json
+    # currently just tests if returned a string, need to change to see if it is valid json
     def test_get_game_data(self):
         """
         Tests a function used to return the game data for rendering in the application.
@@ -49,7 +50,14 @@ class IgdbTests(unittest.TestCase):
         with patch("igdb.requests.get") as mock_get:
             mock_get.return_value = mock_response
             result = search_game_data("Super Mario Strikers")
-            self.assertEqual(result, ('Super Mario Strikers', '//images.igdb.com/igdb/image/upload/t_cover_big/co1xd3.jpg', 'Forget what you know about soccer, because in the Mushroom Kingdom, anything goes! Get ready for crazy five-on-five matches as Mario and Co. hit the pitch for the first time ever!'))
+            self.assertEqual(
+                result,
+                (
+                    "Super Mario Strikers",
+                    "//images.igdb.com/igdb/image/upload/t_cover_big/co1xd3.jpg",
+                    "Forget what you know about soccer, because in the Mushroom Kingdom, anything goes! Get ready for crazy five-on-five matches as Mario and Co. hit the pitch for the first time ever!",
+                ),
+            )
 
     def test_get_cover_url(self):
         """
@@ -59,14 +67,15 @@ class IgdbTests(unittest.TestCase):
         mock_response.json.return_value = {}
         with patch("igdb.requests.get") as mock_get:
             mock_get.return_value = mock_response
-            result = get_cover_url(2256  )
-            self.assertEqual(result, "//images.igdb.com/igdb/image/upload/t_cover_big/co1xd3.jpg")
-
+            result = get_cover_url(2256)
+            self.assertEqual(
+                result, "//images.igdb.com/igdb/image/upload/t_cover_big/co1xd3.jpg"
+            )
 
     def test_clean_string(self):
         """
         tests a function to trim and clean user input string for processing in search_game_data()
-        """   
+        """
         result = clean_string("Super Mario 64")
         self.assertEqual(result, "super-mario-64")
 
