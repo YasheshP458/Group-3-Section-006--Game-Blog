@@ -9,10 +9,13 @@
 
 <body>
     <h1> Game Blog </h1>
-    <h3> Welcome <b>{{ username }}</b></h3>
-    <h3> Your User ID is <b>{{ user_id }}</b></h3>
-    <h5 style="color: green;"> You are Successfully Logged In!</h5>
-
+    <h3> Welcome <b>{{username}}</b></h3>
+    <br>
+    {% for game_name in saved_games %}
+    <h5>{{game_name}}</h5>
+    {% endfor %}
+    <br>
+    <br>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
@@ -22,22 +25,14 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
-
-    <form method="POST" action="/main">
-        <input type="text" name="game" placeholder="Search Games" />
+    <br>
+    <br>
+    <form method="POST" action="/account">
+        <input type="text" name="game_name" placeholder="Add Games" />
         <input type="submit" class="submit" value="Submit" />
     </form>
-
-    <h3>{{ game_name }}</h3>
-    <img src="{{cover_url}}">
-    <h5>{{ game_summary }}</h5>
-
-    <form method="POST" action="/account">
-        <input type="submit" value="Check out your account" />
-    </form>
+    <br>
     <form method="POST" action="/logout">
         <input type="submit" value="Log Out!" />
     </form>
 </body>
-
-</html>
