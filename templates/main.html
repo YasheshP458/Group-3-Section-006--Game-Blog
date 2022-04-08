@@ -8,20 +8,33 @@
 </head>
 
 <body>
-    <h1 text-align: center;> Game Blog </h1>
-    <h3> Welcome {{username}} !!</h3>
-    <h3> Your User ID is {{user_id}} !!</h3>
-    <h5> You are Successfully Logged In</h5>
+    <h1> Game Blog </h1>
+    <h3> Welcome <b>{{ username }}</b></h3>
+    <h3> Your User ID is <b>{{ user_id }}</b></h3>
+    <h5 style= "color: green;"> You are Successfully Logged In!</h5>
 
-    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <Text class="flashes">
+        {{message}}
+    </Text>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/main">
+        <input type="text" name="game" placeholder="Search Games" />
+        <input type="submit" class="submit" value="Submit" />
+    </form>
+
+    <h3>{{ game_name }}</h3>
+    <img src="{{cover_url}}">
+    <h5>{{ game_summary }}</h5>
+
     <form method="POST" action="/logout">
         <input type="submit" value="Log Out!" />
     </form>
-
-
-    <div>
-
-    </div>
 </body>
 
 </html>
