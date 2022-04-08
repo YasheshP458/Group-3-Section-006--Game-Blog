@@ -1,9 +1,9 @@
-# pylint: disable=invalid-envvar-default, unused-import, pointless-string-statement, no-member, invalid-name
+# pylint: disable=invalid-envvar-default, unused-import, pointless-string-statement, no-member, invalid-name, no-else-return, too-few-public-methods
 
 """
 Game Blog
 
-Nathan Heckman, Ba Choi, Yashesh Patel, 
+Nathan Heckman, Ba Choi, Yashesh Patel,
 Chris English, Aaron Reyes
 """
 
@@ -18,8 +18,6 @@ from dotenv import load_dotenv, find_dotenv
 from flask import Flask, session, abort, redirect
 
 from flask_sqlalchemy import SQLAlchemy
-
-from igdb import search_game_data, get_cover_url, clean_string, get_game_data
 
 from oauth2client.contrib.flask_util import UserOAuth2
 import google.oauth2.credentials
@@ -39,6 +37,8 @@ from flask_login import (
     logout_user,
     current_user,
 )
+from igdb import search_game_data, get_cover_url, clean_string, get_game_data
+
 
 load_dotenv(find_dotenv())
 
@@ -71,15 +71,26 @@ login_manager.login_view = "login"
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    This function queries the databse for the user ID of the current user
+    """
     return Users.query.get(user_id)
 
 
 @login_manager.unauthorized_handler
 def unauthorized():
+    """
+    This function checks if a user is not logged in. If not they
+    are redirected to the login page
+    """
     return flask.redirect(flask.url_for("login"))
 
 
 class Users(db.Model, UserMixin):
+    """
+    The table that holds the user's username and password
+    """
+
     __tablename__ = "Users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -99,7 +110,7 @@ class SaveGames(db.Model):
     game_name = db.Column(db.String(), unique=True)
 
     def __repr__(self):
-        return "{}".format(self.game_name)
+        return f"{self.game_name}"
 
 
 db.create_all()
@@ -108,6 +119,11 @@ oauth2 = UserOAuth2(app)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    This function handles all the login functionality for the app.
+    This can be done using google oauth or a username and password protected
+    by a secret key.
+    """
     if oauth2.has_credentials():
         return flask.render_template(
             "main.html", username=oauth2.email, user_id=oauth2.user_id
@@ -137,6 +153,11 @@ def login():
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
+    """
+    This function displays the signup page. It allows new users to
+    sign-up for an account if they do not want to use google oauth.
+    All data is handled using a secret key and is stored in the database.
+    """
     if flask.request.method == "POST":
         user_form = flask.request.form
         user_name = user_form["userName"]
@@ -180,12 +201,20 @@ def signup():
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
+    """
+    This function allows a user to logout of the app
+    using flask session management
+    """
     session.clear()
     return flask.redirect(flask.url_for("index"))
 
 
 @app.route("/")
 def index():
+    """
+    This function returns the base page of the app which
+    has options to login or sign-up
+    """
     return flask.render_template("index.html")
 
 
@@ -218,6 +247,10 @@ def account_post():
 
 @app.route("/main", methods=["GET", "POST"])
 def main():
+    """
+    This function returns the main page of the app. Here a user can search
+    for a game and navigate to other pages in the app
+    """
     data = flask.request.form
     input_game = data["game"]
     if flask.request.method == "POST":
@@ -242,12 +275,16 @@ def main():
 
 @app.route("/oauth2authorize")
 def oauth2authorize():
-    pass
+    """
+    This function is used by ouath to authorize users
+    """
 
 
 @app.route("/oauth2callback")
 def oauth2callback():
-    pass
+    """
+    This function is used by ouath for callback to the original webpage
+    """
 
 
 # app.run(host=os.getenv("IP", "0.0.0.0"), port=int(os.getenv("PORT", 8080)), debug=True)
