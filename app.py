@@ -8,6 +8,7 @@ Chris English, Aaron Reyes
 """
 
 import os
+from re import L
 import flask
 import requests
 import bcrypt
@@ -16,6 +17,8 @@ from dotenv import load_dotenv, find_dotenv
 from flask import Flask, session, abort, redirect
 
 from flask_sqlalchemy import SQLAlchemy
+
+from igdb import search_game_data, get_cover_url, clean_string, get_game_data
 
 from oauth2client.contrib.flask_util import UserOAuth2
 import google.oauth2.credentials
@@ -175,9 +178,28 @@ def account():
     pass
 
 
-@app.route("/main")
+@app.route("/main", methods=["GET", "POST"])
 def main():
-    return flask.render_template("main.html")
+    data = flask.request.form
+    input_game = data["game"]
+    if flask.request.method == "POST":
+        if search_game_data(input_game) == "Invalid Name":
+            flask.flash("Game does not exist or invalid name. Try again!")
+        else:
+            game_name, cover_url, game_summary = search_game_data(input_game)
+            return flask.render_template(
+                "main.html",
+                game_name = game_name,
+                cover_url = cover_url,
+                game_summary = game_summary,
+                username=oauth2.email,
+                user_id=oauth2.user_id,
+            )
+    return flask.render_template(
+        "main.html",
+        username=oauth2.email,
+        user_id=oauth2.user_id,
+    )
 
 
 @app.route("/oauth2authorize")
