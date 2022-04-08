@@ -44,11 +44,7 @@ app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 app.config["BCRYPT_LEVEL"] = 10
 # bcrypt = Bcrypt(app)
 
-""" 
-USED FOR CLEANING DATABASE URI, NEED TO TOUCH UP
-"""
 # Point SQLAlchemy to your Heroku database
-
 uri = os.getenv("DATABASE_URL")
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
@@ -61,7 +57,6 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["GOOGLE_OAUTH2_CLIENT_SECRETS_FILE"] = "client_secret.json"
 # Point SQLAlchemy to Heroku database. Already accounted for postgres -> postgresql
 app.config["SQLALCHEMY_DATABASE_URI"] = uri
-# Gets rid of meaningless warnings
 
 db = SQLAlchemy(app)
 
