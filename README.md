@@ -1,4 +1,4 @@
-Sprint 1 - Game Blog
+<h1>Sprint 1 - Game Blog</h1>
 
 <p>Nathan Heckman<br>
 <p>Ba Choi<br>
