@@ -11,6 +11,7 @@ import os
 from re import L
 import flask
 import requests
+from sqlalchemy import ForeignKey
 import bcrypt
 from dotenv import load_dotenv, find_dotenv
 
@@ -84,6 +85,21 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.LargeBinary(), nullable=False)
+
+
+class SaveGames(db.Model):
+    """
+    The table that holds username and it's associated saved games
+    """
+
+    __tablename__ = "SaveGames"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(), ForeignKey("Users.username"))
+    game_name = db.Column(db.String(), unique=True)
+
+    def __repr__(self):
+        return "{}".format(self.game_name)
 
 
 db.create_all()
@@ -173,9 +189,31 @@ def index():
     return flask.render_template("index.html")
 
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
 def account():
-    pass
+    """
+    This function gets the account html page and displays it
+    """
+    user = current_user.username
+    saved_games = SaveGames.query.filter_by(username=user).all()
+    return flask.render_template("account.html", username=user, saved_games=saved_games)
+
+
+@app.route("/save_game", methods=["POST"])
+def account_post():
+    """
+    This function saves a user inputted game into the database
+    """
+    game_name = flask.request.form.get("game_name")
+    db_game_name = SaveGames.query.filter_by(game_name=game_name).first()
+    if search_game_data(game_name) == "Invalid Name":
+        flask.flash("Game does not exist or invalid name. Try again!")
+    if game_name == db_game_name:
+        flask.flash("Game already exists. Try again!")
+    game_commit = SaveGames(username=current_user.username, game_name=game_name)
+    db.session.add(game_commit)
+    db.session.commit()
+    return flask.redirect(flask.url_for("account"))
 
 
 @app.route("/main", methods=["GET", "POST"])
@@ -189,9 +227,9 @@ def main():
             game_name, cover_url, game_summary = search_game_data(input_game)
             return flask.render_template(
                 "main.html",
-                game_name = game_name,
-                cover_url = cover_url,
-                game_summary = game_summary,
+                game_name=game_name,
+                cover_url=cover_url,
+                game_summary=game_summary,
                 username=oauth2.email,
                 user_id=oauth2.user_id,
             )
