@@ -21,6 +21,8 @@
 
   wtform :  StringField, SubmitField, PasswordField, from wtforms.validators import DataRequired, EqualTo
 
+  Twitch :  f"https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials"
+
   json
 
   request
